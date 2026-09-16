@@ -30,6 +30,7 @@ function validarTreino(corpo) {
     if (typeof corpo.nome !== 'string' || corpo.nome.trim() === '') {
         return ("O campo nome e obrigatorio e deve ser um texto .");
     }
+    // [PROF] Olha o 'number ' com espaco no final. typeof nunca devolve isso, entao toda duracao vai dar erro e nenhum POST funciona.
     if (typeof corpo.duracao !== 'number ' || corpo.duracao <= 0) {
         return ("O campo duracao e obrigatorio e deve ser um numero maior que zero .");
     }
@@ -58,6 +59,7 @@ app.get('/treinos/:id', (req, res) => {
 // GET /treinos/:id - busca um treino pelo id (404 se nao existir)
 // ------------------------------------------------------------
 
+// [PROF] Tem espaco dentro da rota. O Express compara letra por letra, entao '/ treinos ' nunca bate com /treinos. Tira todos os espacos de dentro das aspas.
 app.post('/treinos ', (req, res) => {
     const erro = validarTreino(req.body);
     if (erro !== null) {
@@ -77,6 +79,7 @@ app.post('/treinos ', (req, res) => {
 // POST /treinos - cria um treino (400 se os dados forem invalidos)
 // ------------------------------------------------------------
 
+// [PROF] Espaco depois do :id. Tira o espaco de dentro das aspas.
 app.put('/treinos/:id ', (req, res) => {
     const id = Number(req.params.id);
     const treino = treinos.find((t) => t.id === id);
@@ -102,6 +105,7 @@ app.put('/treinos/:id ', (req, res) => {
 // DELETE /treinos/:id - remove um treino
 // ------------------------------------------------------------
 
+// [PROF] Tem espaco dentro da rota. O Express compara letra por letra, entao '/ treinos ' nunca bate com /treinos. Tira todos os espacos de dentro das aspas.
 app.delete('/treinos/: id ', (req, res) => {
     const id = Number(req.params.id);
     const posicao = treinos.findIndex((t) => t.id === id);
