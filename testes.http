@@ -77,7 +77,6 @@ Content-Type: application/json
 {
     "nome": "Qualquer",
     "duracao": 10
-}
 
 
 ### 10 - Apagar o treino 2                 -> espera 204 (sem corpo)
