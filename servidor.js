@@ -31,7 +31,7 @@ function validarTreino(corpo) {
         return ("O campo nome e obrigatorio e deve ser um texto .");
     }
     // [PROF] Olha o 'number ' com espaco no final. typeof nunca devolve isso, entao toda duracao vai dar erro e nenhum POST funciona.
-    if (typeof corpo.duracao !== 'number ' || corpo.duracao <= 0) {
+    if (typeof corpo.duracao !== 'number' || corpo.duracao <= 0) {
         return ("O campo duracao e obrigatorio e deve ser um numero maior que zero .");
     }
     return null;
@@ -41,10 +41,14 @@ function validarTreino(corpo) {
 // ------------------------------------------------------------
 // GET /treinos - lista todos os treinos
 // ------------------------------------------------------------
-
 app.get('/treinos', (req, res) => {
     res.status(200).json(treinos);
 });
+
+
+// ------------------------------------------------------------
+// GET /treinos/:id - busca um treino pelo id (404 se nao existir)
+// ------------------------------------------------------------
 app.get('/treinos/:id', (req, res) => {
     const id = Number(req.params.id);
     const treino = treinos.find((t) => t.id === id);
@@ -56,11 +60,10 @@ app.get('/treinos/:id', (req, res) => {
 
 
 // ------------------------------------------------------------
-// GET /treinos/:id - busca um treino pelo id (404 se nao existir)
+// POST /treinos - cria um treino (400 se os dados forem invalidos)
 // ------------------------------------------------------------
-
 // [PROF] Tem espaco dentro da rota. O Express compara letra por letra, entao '/ treinos ' nunca bate com /treinos. Tira todos os espacos de dentro das aspas.
-app.post('/treinos ', (req, res) => {
+app.post('/treinos', (req, res) => {
     const erro = validarTreino(req.body);
     if (erro !== null) {
         return res.status(400).json({ erro: erro });
@@ -75,16 +78,15 @@ app.post('/treinos ', (req, res) => {
     res.status(201).json(treino);
 });
 
-// ------------------------------------------------------------
-// POST /treinos - cria um treino (400 se os dados forem invalidos)
-// ------------------------------------------------------------
 
-// [PROF] Espaco depois do :id. Tira o espaco de dentro das aspas.
-app.put('/treinos/:id ', (req, res) => {
+// ------------------------------------------------------------
+// PUT /treinos/:id - substitui um treino
+// ------------------------------------------------------------
+app.put('/treinos/:id', (req, res) => {
     const id = Number(req.params.id);
     const treino = treinos.find((t) => t.id === id);
     if (treino === undefined) {
-        return res.status(404).json({ erro: 'Treino nao encontrado .' });
+        return res.status(404).json({ erro: 'Treino nao encontrado.' });
     }
     const erro = validarTreino(req.body);
     if (erro !== null) {
@@ -95,40 +97,20 @@ app.put('/treinos/:id ', (req, res) => {
     res.status(200).json(treino);
 });
 
-// ------------------------------------------------------------
-// PUT /treinos/:id - substitui um treino
-// ------------------------------------------------------------
-app.put('/treinos/:id',(req,res)=> {
-const id = Number(req.params.id);
-const treino = treinos.find((t)=>t.id===id);
-if (treino === undefined) {
-return res.status (404).json({erro:'Treino nao encontrado.'});
-}
-const erro = validarTreino(req.body);
-if (erro !== null){
-return res.status (400).json({erro: erro});
-}
-treino.nome =req.body.nome;
-treino.duracao =req.body.duracao;
-res.status(200).json(treino);
-});
 
 // ------------------------------------------------------------
 // DELETE /treinos/:id - remove um treino
 // ------------------------------------------------------------
-
 // [PROF] Tem espaco dentro da rota. O Express compara letra por letra, entao '/ treinos ' nunca bate com /treinos. Tira todos os espacos de dentro das aspas.
-app.delete('/treinos/: id ', (req, res) => {
+app.delete('/treinos/:id', (req, res) => {
     const id = Number(req.params.id);
     const posicao = treinos.findIndex((t) => t.id === id);
     if (posicao === -1) {
-        return res.status(404).json({ erro: 'Treino nao encontrado .' });
+        return res.status(404).json({ erro: 'Treino nao encontrado.' });
     }
     treinos.splice(posicao, 1);
     res.status(204).end();
 });
-
-
 
 // ------------------------------------------------------------
 const PORTA = 3000;
